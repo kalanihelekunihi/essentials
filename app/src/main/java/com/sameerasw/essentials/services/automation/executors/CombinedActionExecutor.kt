@@ -40,6 +40,11 @@ import rikka.shizuku.ShizukuBinderWrapper
 import rikka.shizuku.SystemServiceHelper
 
 object CombinedActionExecutor {
+    private suspend fun vibrateModeHaptic(context: Context) {
+        kotlinx.coroutines.delay(350)
+        HapticUtil.performStrongDoubleHaptic(context)
+    }
+
     suspend fun execute(
         context: Context,
         action: Action,
@@ -216,6 +221,7 @@ object CombinedActionExecutor {
                         }
                     try {
                         audioManager.ringerMode = ringerMode
+                        if (ringerMode == AudioManager.RINGER_MODE_VIBRATE) vibrateModeHaptic(context)
                     } catch (e: Exception) {
                         e.printStackTrace()
                     }
@@ -381,12 +387,10 @@ object CombinedActionExecutor {
                     val nm = context.getSystemService(Context.NOTIFICATION_SERVICE) as android.app.NotificationManager
                     if (nm.isNotificationPolicyAccessGranted) {
                         try {
+                            val enteringVibrate = am.ringerMode != AudioManager.RINGER_MODE_VIBRATE
                             am.ringerMode =
-                                if (am.ringerMode == AudioManager.RINGER_MODE_VIBRATE) {
-                                    AudioManager.RINGER_MODE_NORMAL
-                                } else {
-                                    AudioManager.RINGER_MODE_VIBRATE
-                                }
+                                if (enteringVibrate) AudioManager.RINGER_MODE_VIBRATE else AudioManager.RINGER_MODE_NORMAL
+                            if (enteringVibrate) vibrateModeHaptic(context)
                         } catch (e: Exception) {
                             e.printStackTrace()
                         }
