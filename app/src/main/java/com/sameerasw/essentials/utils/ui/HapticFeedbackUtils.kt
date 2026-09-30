@@ -27,6 +27,7 @@ fun performHapticFeedback(
     vibrator: Vibrator,
     feedbackType: HapticFeedbackType,
 ) {
+    if (!HapticUtil.isAppHapticsEnabled.value) return
     if (!vibrator.hasVibrator()) return
 
     when (feedbackType) {

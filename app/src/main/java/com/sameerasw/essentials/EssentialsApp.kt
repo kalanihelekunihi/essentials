@@ -35,6 +35,7 @@ class EssentialsApp : Application() {
     override fun onCreate() {
         super.onCreate()
         context = applicationContext
+        com.sameerasw.essentials.utils.HapticUtil.initialize(this)
 
         try {
             resources?.configuration

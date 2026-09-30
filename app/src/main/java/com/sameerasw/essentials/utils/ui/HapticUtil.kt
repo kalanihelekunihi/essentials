@@ -19,6 +19,8 @@ import android.os.VibratorManager
 import android.view.HapticFeedbackConstants
 import android.view.View
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.hapticfeedback.HapticFeedback
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType as ComposeHapticFeedbackType
 import com.sameerasw.essentials.domain.HapticFeedbackType
 
 /**
@@ -28,6 +30,18 @@ import com.sameerasw.essentials.domain.HapticFeedbackType
 object HapticUtil {
     // Mutable state to track if in-app haptics are enabled
     val isAppHapticsEnabled = mutableStateOf(true)
+
+    fun gate(delegate: HapticFeedback): HapticFeedback =
+        object : HapticFeedback {
+            override fun performHapticFeedback(hapticFeedbackType: ComposeHapticFeedbackType) {
+                if (isAppHapticsEnabled.value) delegate.performHapticFeedback(hapticFeedbackType)
+            }
+        }
+
+    fun vibrate(context: Context, effect: VibrationEffect) {
+        if (!isAppHapticsEnabled.value) return
+        runCatching { getVibrator(context).vibrate(effect) }
+    }
 
     /**
      * Perform standard UI interaction haptic feedback (keyboard tap / standard click)

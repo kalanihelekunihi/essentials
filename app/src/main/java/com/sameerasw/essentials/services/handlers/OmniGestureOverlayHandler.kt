@@ -147,6 +147,7 @@ class OmniGestureOverlayHandler(
     }
 
     private fun startRampingHaptic() {
+        if (!com.sameerasw.essentials.utils.HapticUtil.isAppHapticsEnabled.value) return
         val v = vibrator ?: return
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             runCatching {
@@ -174,6 +175,7 @@ class OmniGestureOverlayHandler(
     }
 
     private fun triggerFinalTick() {
+        if (!com.sameerasw.essentials.utils.HapticUtil.isAppHapticsEnabled.value) return
         val v = vibrator ?: return
         runCatching {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
