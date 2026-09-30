@@ -124,6 +124,8 @@ import com.sameerasw.essentials.ui.modifiers.scrollMotionBlur
 import com.sameerasw.essentials.ui.theme.EssentialsTheme
 import com.sameerasw.essentials.ui.theme.Shapes
 import com.sameerasw.essentials.utils.DeviceUtils
+import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
+import com.sameerasw.essentials.utils.AppHapticMode
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.PermissionGrantUtil
 import kotlinx.coroutines.withContext
@@ -325,7 +327,7 @@ fun SettingsContent(
     val isUsageStatsPermissionGranted by viewModel.isUsageStatsPermissionGranted
     val isStoragePermissionGranted by viewModel.isStoragePermissionGranted
     val context = LocalContext.current
-    val isAppHapticsEnabled = remember { mutableStateOf(HapticUtil.loadAppHapticsEnabled(context)) }
+    val hapticMode by HapticUtil.hapticMode
     var isPermissionsExpanded by remember { mutableStateOf(expandPermissionsInitial) }
     var showUpdateSheet by remember { mutableStateOf(false) }
     val updateInfo by viewModel.updateInfo
@@ -704,14 +706,18 @@ fun SettingsContent(
                 onCheckedChange = { viewModel.setSwipeTabsEnabled(it) },
             )
 
-            IconToggleItem(
-                iconRes = R.drawable.rounded_mobile_vibrate_24,
-                title = "Haptic Feedback",
-                isChecked = isAppHapticsEnabled.value,
-                onCheckedChange = { isChecked ->
-                    isAppHapticsEnabled.value = isChecked
-                    HapticUtil.saveAppHapticsEnabled(context, isChecked)
-                },
+            val hapticModeLabels = mapOf(
+                AppHapticMode.DISABLED to stringResource(R.string.haptic_mode_disabled),
+                AppHapticMode.ENABLED to stringResource(R.string.haptic_mode_enabled),
+                AppHapticMode.STRONGER to stringResource(R.string.haptic_mode_stronger),
+            )
+            SegmentedPicker(
+                items = AppHapticMode.entries,
+                selectedItem = hapticMode,
+                onItemSelected = { HapticUtil.saveHapticMode(context, it) },
+                labelProvider = { hapticModeLabels.getValue(it) },
+                modifier = Modifier.fillMaxWidth(),
+                title = stringResource(R.string.label_haptic_feedback),
             )
 
             IconToggleItem(

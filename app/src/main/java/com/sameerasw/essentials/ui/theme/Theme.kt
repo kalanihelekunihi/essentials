@@ -80,7 +80,7 @@ fun EssentialsTheme(
             else -> LightColorScheme
         }
 
-    val gatedHaptics = HapticUtil.gate(LocalHapticFeedback.current)
+    val gatedHaptics = HapticUtil.gate(LocalContext.current, LocalHapticFeedback.current)
     CompositionLocalProvider(LocalHapticFeedback provides gatedHaptics) {
         MaterialTheme(
             colorScheme = colorScheme,

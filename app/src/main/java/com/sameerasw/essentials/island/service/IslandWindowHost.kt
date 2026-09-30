@@ -14,6 +14,7 @@ import android.widget.FrameLayout
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.platform.ComposeView
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import com.sameerasw.essentials.utils.HapticUtil
 import androidx.compose.ui.platform.ViewCompositionStrategy
@@ -59,7 +60,7 @@ class IslandWindowHost(
         val compose = ComposeView(context).apply {
             setViewCompositionStrategy(ViewCompositionStrategy.DisposeOnDetachedFromWindow)
             setContent {
-                val gated = HapticUtil.gate(LocalHapticFeedback.current)
+                val gated = HapticUtil.gate(LocalContext.current, LocalHapticFeedback.current)
                 CompositionLocalProvider(LocalHapticFeedback provides gated) { content() }
             }
         }

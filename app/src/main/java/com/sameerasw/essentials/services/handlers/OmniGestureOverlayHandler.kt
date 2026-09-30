@@ -154,7 +154,7 @@ class OmniGestureOverlayHandler(
                 val effect =
                     VibrationEffect
                         .startComposition()
-                        .addPrimitive(VibrationEffect.Composition.PRIMITIVE_SLOW_RISE, 0.6f)
+                        .addPrimitive(VibrationEffect.Composition.PRIMITIVE_SLOW_RISE, com.sameerasw.essentials.utils.HapticUtil.boost(0.6f))
                         .compose()
                 v.vibrate(effect)
             }.onFailure { fallbackRampingWaveform(v) }
