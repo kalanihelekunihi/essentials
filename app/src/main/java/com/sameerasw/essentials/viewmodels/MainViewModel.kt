@@ -202,6 +202,7 @@ class MainViewModel : ViewModel() {
     val isIslandTimersShowScreenRecorder = mutableStateOf(true)
     val isIslandShowNetwork = mutableStateOf(true)
     val isIslandShowSoundMode = mutableStateOf(true)
+    val isIslandSoundModeKeepIcon = mutableStateOf(true)
     val isIslandShowAlarm = mutableStateOf(false)
     val islandAlarmWindowHours = mutableIntStateOf(12)
     val isIslandShowTravel = mutableStateOf(true)
@@ -2248,6 +2249,7 @@ class MainViewModel : ViewModel() {
         isIslandTimersShowScreenRecorder.value = settingsRepository.isIslandTimersShowScreenRecorderEnabled()
         isIslandShowNetwork.value = settingsRepository.isIslandShowNetworkEnabled()
         isIslandShowSoundMode.value = settingsRepository.isIslandShowSoundModeEnabled()
+        isIslandSoundModeKeepIcon.value = settingsRepository.isIslandSoundModeKeepIconEnabled()
         isIslandShowAlarm.value = settingsRepository.isIslandShowAlarmEnabled()
         islandAlarmWindowHours.intValue = settingsRepository.getIslandAlarmWindowHours()
         isIslandShowTravel.value = settingsRepository.isIslandShowTravelEnabled()
@@ -5297,6 +5299,11 @@ class MainViewModel : ViewModel() {
     fun setIslandShowSoundMode(enabled: Boolean) {
         isIslandShowSoundMode.value = enabled
         settingsRepository.setIslandShowSoundModeEnabled(enabled)
+    }
+
+    fun setIslandSoundModeKeepIcon(enabled: Boolean) {
+        isIslandSoundModeKeepIcon.value = enabled
+        settingsRepository.setIslandSoundModeKeepIconEnabled(enabled)
     }
 
     fun setIslandShowNetwork(enabled: Boolean) {

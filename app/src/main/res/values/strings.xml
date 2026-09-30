@@ -2964,6 +2964,8 @@
     <string name="island_travel_pause">Pause</string>
     <string name="island_travel_resume">Resume</string>
     <string name="island_show_sound_mode_title">Sound mode</string>
+    <string name="island_sound_mode_options_title">Sound mode options</string>
+    <string name="island_sound_mode_keep_icon_title">Keep showing the icon</string>
     <string name="island_show_alarm_title">Alarm</string>
     <string name="island_alarm_options_title">Alarm options</string>
     <string name="island_brief_show_alarm_title">Show upcoming alarm</string>

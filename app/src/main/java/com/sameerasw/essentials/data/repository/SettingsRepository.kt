@@ -537,6 +537,7 @@ class SettingsRepository(
         const val KEY_ISLAND_TIMERS_SHOW_SCREEN_RECORDER = "island_timers_show_screen_recorder"
         const val KEY_ISLAND_SHOW_NETWORK = "island_show_network"
         const val KEY_ISLAND_SHOW_SOUND_MODE = "island_show_sound_mode"
+        const val KEY_ISLAND_SOUND_MODE_KEEP_ICON = "island_sound_mode_keep_icon"
         const val KEY_ISLAND_SHOW_ALARM = "island_show_alarm"
         const val KEY_ISLAND_TIME_BATTERY_LAUNCHER_ONLY = "island_time_battery_launcher_only"
         const val KEY_ISLAND_WEATHER_LAUNCHER_ONLY = "island_weather_launcher_only"
@@ -3772,6 +3773,9 @@ class SettingsRepository(
 
     fun isIslandShowSoundModeEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_SOUND_MODE, true)
     fun setIslandShowSoundModeEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_SOUND_MODE, enabled)
+
+    fun isIslandSoundModeKeepIconEnabled(): Boolean = getBoolean(KEY_ISLAND_SOUND_MODE_KEEP_ICON, true)
+    fun setIslandSoundModeKeepIconEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SOUND_MODE_KEEP_ICON, enabled)
 
     fun isIslandShowAlarmEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_ALARM, false)
     fun setIslandShowAlarmEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_ALARM, enabled)

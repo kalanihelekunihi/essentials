@@ -71,6 +71,7 @@ import com.sameerasw.essentials.ui.features.display.sheets.IslandCallOptionsBott
 import com.sameerasw.essentials.ui.features.display.sheets.IslandDevicesBatteryBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandNotificationOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandPulseShadowOptionsBottomSheet
+import com.sameerasw.essentials.ui.features.display.sheets.IslandSoundModeOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandTimeBatteryOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandTimerOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.IslandWeatherOptionsBottomSheet
@@ -104,6 +105,7 @@ fun IslandSettingsUI(
     var requestingPermissionsFor by remember { mutableStateOf<Pair<Int, List<String>>?>(null) }
     var showMediaAppSelectionSheet by remember { mutableStateOf(false) }
     var showCalendarOptionsSheet by remember { mutableStateOf(false) }
+    var showSoundModeOptionsSheet by remember { mutableStateOf(false) }
     var showDevicesBatterySheet by remember { mutableStateOf(false) }
     var showTimeBatteryOptionsSheet by remember { mutableStateOf(false) }
     var showTimerOptionsSheet by remember { mutableStateOf(false) }
@@ -353,6 +355,7 @@ fun IslandSettingsUI(
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.setIslandShowSoundMode(checked)
                 },
+                onSettingsClick = { showSoundModeOptionsSheet = true },
                 modifier = Modifier.highlight(highlightSetting == "island_show_sound_mode"),
             )
 
@@ -631,6 +634,13 @@ fun IslandSettingsUI(
             viewModel = viewModel,
             onDismissRequest = { showBriefOptionsSheet = false },
             highlightSetting = highlightSetting,
+        )
+    }
+
+    if (showSoundModeOptionsSheet) {
+        IslandSoundModeOptionsBottomSheet(
+            viewModel = viewModel,
+            onDismissRequest = { showSoundModeOptionsSheet = false },
         )
     }
 
