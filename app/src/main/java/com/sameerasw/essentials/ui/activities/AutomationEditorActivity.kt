@@ -269,7 +269,7 @@ class AutomationEditorActivity : ComponentActivity() {
                         isLoadingApps = true
                         withContext(Dispatchers.IO) {
                             try {
-                                val installed = AppUtil.getInstalledApps(context)
+                                val installed = AppUtil.getInstalledApps(context, includeSelf = true)
                                 // Merge with selection if existing
                                 val merged =
                                     AppUtil.mergeWithSavedApps(
@@ -1732,6 +1732,7 @@ class AutomationEditorActivity : ComponentActivity() {
 
                             if (showOpenAppSettings) {
                                 SingleAppSelectionSheet(
+                                    includeSelf = true,
                                     onDismissRequest = { showOpenAppSettings = false },
                                     onAppSelected = { app ->
                                         val newAction = Action.OpenApp(packageName = app.packageName)
