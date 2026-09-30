@@ -291,6 +291,39 @@ object HapticUtil {
 
     private val THUNDER_TAIL = floatArrayOf(0.3f, 0.22f, 0.16f, 0.12f, 0.4f, 0.2f, 0.12f, 0.07f, 0.04f)
 
+    fun performStrongDoubleHaptic(context: Context) {
+        if (!isAppHapticsEnabled.value) return
+        val vibrator = getVibrator(context)
+        if (!vibrator.hasVibrator()) return
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R &&
+            vibrator.areAllPrimitivesSupported(VibrationEffect.Composition.PRIMITIVE_CLICK)
+        ) {
+            val composition = VibrationEffect.startComposition()
+                .addPrimitive(VibrationEffect.Composition.PRIMITIVE_CLICK, 1.0f)
+                .addPrimitive(VibrationEffect.Composition.PRIMITIVE_CLICK, 1.0f, 80)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S &&
+                vibrator.areAllPrimitivesSupported(VibrationEffect.Composition.PRIMITIVE_THUD)
+            ) {
+                composition.addPrimitive(VibrationEffect.Composition.PRIMITIVE_THUD, 1.0f, 50)
+            } else {
+                composition.addPrimitive(VibrationEffect.Composition.PRIMITIVE_CLICK, 0.8f, 80)
+            }
+            val effect = composition.composeBoosted(vibrator)
+            vibrateWithTouchAttributes(vibrator, effect)
+            return
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            vibrateWithTouchAttributes(vibrator, VibrationEffect.createPredefined(VibrationEffect.EFFECT_HEAVY_CLICK))
+            return
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            vibrator.vibrate(VibrationEffect.createWaveform(longArrayOf(0, 35, 70, 45, 50, 40), intArrayOf(0, 255, 0, 255, 0, 255), -1))
+        }
+    }
+
     fun performStrongTickHaptic(context: Context) {
         if (!isAppHapticsEnabled.value) return
         val vibrator = getVibrator(context)
