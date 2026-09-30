@@ -337,6 +337,7 @@ class AutomationEditorActivity : ComponentActivity() {
                 var temporarySelectedAppsForAction by remember { mutableStateOf<List<String>>(emptyList()) }
                 var showTimeSettings by remember { mutableStateOf(false) }
                 var showCalendarStateSettings by remember { mutableStateOf(false) }
+                var showBatteryLevelSettings by remember { mutableStateOf(false) }
                 var showBluetoothSettings by remember { mutableStateOf(false) }
                 var showWifiSettings by remember { mutableStateOf(false) }
                 var showSetKeyboardSheet by remember { mutableStateOf(false) }
@@ -1073,6 +1074,7 @@ class AutomationEditorActivity : ComponentActivity() {
                                                                     listOf(
                                                                         DIYState.Charging,
                                                                         DIYState.PowerSaving,
+                                                                        (selectedState as? DIYState.BatteryLevel) ?: DIYState.BatteryLevel(),
                                                                     ),
                                                                 R.string.diy_category_system_screen to
                                                                     listOf(
@@ -1134,10 +1136,14 @@ class AutomationEditorActivity : ComponentActivity() {
                                                                     iconRes = state.icon,
                                                                     isSelected = isSelected,
                                                                     onClick = { selectedState = state },
-                                                                    isConfigurable = state is DIYState.TimePeriod || state is DIYState.CalendarEvent,
+                                                                    isConfigurable = state is DIYState.TimePeriod || state is DIYState.CalendarEvent || state is DIYState.BatteryLevel,
                                                                     onSettingsClick = {
                                                                         if (state is DIYState.TimePeriod) {
                                                                             showTimeSettings = true
+                                                                        }
+                                                                        if (state is DIYState.BatteryLevel) {
+                                                                            selectedState = state
+                                                                            showBatteryLevelSettings = true
                                                                         }
                                                                         if (state is DIYState.CalendarEvent) {
                                                                             selectedState = state
@@ -1398,6 +1404,14 @@ class AutomationEditorActivity : ComponentActivity() {
                                         }
                                     }
                                 }
+                            }
+
+                            if (showBatteryLevelSettings) {
+                                com.sameerasw.essentials.ui.core.sheets.BatteryLevelStateSheet(
+                                    initialState = selectedState as? DIYState.BatteryLevel,
+                                    onDismiss = { showBatteryLevelSettings = false },
+                                    onStateChange = { selectedState = it },
+                                )
                             }
 
                             if (showCalendarStateSettings) {

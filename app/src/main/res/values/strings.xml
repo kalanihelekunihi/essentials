@@ -1214,6 +1214,8 @@
 
     <string name="diy_state_charging">Charging</string>
     <string name="diy_state_screen_on">Screen On</string>
+    <string name="diy_state_battery_level">Battery level</string>
+    <string name="diy_battery_level_range">%1$d%% – %2$d%%</string>
     <string name="diy_state_power_saving">Power Saving</string>
 
     <string name="diy_action_haptic">Vibrate</string>
