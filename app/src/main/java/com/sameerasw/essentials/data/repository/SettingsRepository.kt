@@ -566,6 +566,7 @@ class SettingsRepository(
         const val KEY_ISLAND_NOTIF_TAP_TO_OPEN = "island_notif_tap_to_open"
         const val KEY_ISLAND_BORDER_OUTLINE_ENABLED = "island_border_outline_enabled"
         const val KEY_ISLAND_BORDER_OUTLINE_COLOR = "island_border_outline_color"
+        const val KEY_ISLAND_BORDER_OUTLINE_DYNAMIC = "island_border_outline_dynamic"
         const val KEY_ISLAND_BORDER_OUTLINE_THICKNESS = "island_border_outline_thickness"
         const val KEY_ISLAND_BORDER_OUTLINE_HIDE_EXPANDED = "island_border_outline_hide_expanded"
         const val KEY_ISLAND_PULSE_SHADOW_ON_NOTIFICATION = "island_pulse_shadow_on_notification"
@@ -3603,6 +3604,9 @@ class SettingsRepository(
     fun getIslandBorderOutlineColor(): String =
         getString(KEY_ISLAND_BORDER_OUTLINE_COLOR, ISLAND_BORDER_OUTLINE_DEFAULT_COLOR) ?: ISLAND_BORDER_OUTLINE_DEFAULT_COLOR
     fun setIslandBorderOutlineColor(colorHex: String) = putString(KEY_ISLAND_BORDER_OUTLINE_COLOR, colorHex)
+
+    fun isIslandBorderOutlineDynamicEnabled(): Boolean = getBoolean(KEY_ISLAND_BORDER_OUTLINE_DYNAMIC, false)
+    fun setIslandBorderOutlineDynamicEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_BORDER_OUTLINE_DYNAMIC, enabled)
 
     fun isIslandBorderOutlineHiddenWhenExpanded(): Boolean = getBoolean(KEY_ISLAND_BORDER_OUTLINE_HIDE_EXPANDED, false)
     fun setIslandBorderOutlineHiddenWhenExpanded(hidden: Boolean) = putBoolean(KEY_ISLAND_BORDER_OUTLINE_HIDE_EXPANDED, hidden)

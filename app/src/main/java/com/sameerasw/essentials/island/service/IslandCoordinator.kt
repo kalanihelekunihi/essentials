@@ -503,6 +503,7 @@ class IslandCoordinator(
             } else {
                 null
             },
+            outlineDynamic = settings.isIslandBorderOutlineDynamicEnabled(),
             outlineThickness = settings.getIslandBorderOutlineThickness().coerceIn(1f, 5f).dp,
             outlineHiddenWhenExpanded = settings.isIslandBorderOutlineHiddenWhenExpanded(),
             pulseShadow = settings.isIslandPulseShadowEnabled(),
@@ -570,6 +571,7 @@ class IslandCoordinator(
             SettingsRepository.KEY_ISLAND_EXPANDED_WIDTH,
             SettingsRepository.KEY_ISLAND_BORDER_OUTLINE_ENABLED,
             SettingsRepository.KEY_ISLAND_BORDER_OUTLINE_COLOR,
+            SettingsRepository.KEY_ISLAND_BORDER_OUTLINE_DYNAMIC,
             SettingsRepository.KEY_ISLAND_BORDER_OUTLINE_THICKNESS,
             SettingsRepository.KEY_ISLAND_BORDER_OUTLINE_HIDE_EXPANDED,
             SettingsRepository.KEY_ISLAND_PULSE_SHADOW_ON_NOTIFICATION,

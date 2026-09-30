@@ -233,6 +233,7 @@ class MainViewModel : ViewModel() {
     val isIslandShowGlow = mutableStateOf(true)
     val isIslandBorderOutline = mutableStateOf(false)
     val islandBorderOutlineColor = mutableStateOf(SettingsRepository.ISLAND_BORDER_OUTLINE_DEFAULT_COLOR)
+    val isIslandBorderOutlineDynamic = mutableStateOf(false)
     val islandBorderOutlineThickness = mutableFloatStateOf(1f)
     val isIslandBorderOutlineHiddenWhenExpanded = mutableStateOf(false)
     val isIslandPulseShadow = mutableStateOf(false)
@@ -2287,6 +2288,7 @@ class MainViewModel : ViewModel() {
         isIslandShowGlow.value = settingsRepository.isIslandShowGlowEnabled()
         isIslandBorderOutline.value = settingsRepository.isIslandBorderOutlineEnabled()
         islandBorderOutlineColor.value = settingsRepository.getIslandBorderOutlineColor()
+        isIslandBorderOutlineDynamic.value = settingsRepository.isIslandBorderOutlineDynamicEnabled()
         islandBorderOutlineThickness.floatValue = settingsRepository.getIslandBorderOutlineThickness()
         isIslandBorderOutlineHiddenWhenExpanded.value = settingsRepository.isIslandBorderOutlineHiddenWhenExpanded()
         isIslandPulseShadow.value = settingsRepository.isIslandPulseShadowEnabled()
@@ -5496,6 +5498,11 @@ class MainViewModel : ViewModel() {
     fun setIslandBorderOutlineColor(colorHex: String) {
         islandBorderOutlineColor.value = colorHex
         settingsRepository.setIslandBorderOutlineColor(colorHex)
+    }
+
+    fun setIslandBorderOutlineDynamic(enabled: Boolean) {
+        isIslandBorderOutlineDynamic.value = enabled
+        settingsRepository.setIslandBorderOutlineDynamicEnabled(enabled)
     }
 
     fun setIslandBorderOutlineThickness(value: Float) {

@@ -96,6 +96,7 @@ class IslandItem(
     val line: LineContent? = null,
     val expanded: ExpandedContent? = null,
     val accent: Color? = null,
+    val outlineAccent: Color? = null,
     val dismissible: Boolean = false,
     val onDismiss: (() -> Unit)? = null,
     val onOpen: (() -> Unit)? = null,
