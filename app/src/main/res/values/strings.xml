@@ -1268,6 +1268,15 @@
     <string name="diy_action_sometimes_essentials">Sometimes Essential</string>
     <string name="diy_action_freeze_tag">Freeze by Tags</string>
     <string name="diy_action_open_app">Open App</string>
+    <string name="diy_action_duo_turnon">Turn On Duo</string>
+    <string name="diy_action_duo_turnoff">Turn Off Duo</string>
+    <string name="diy_action_duo_toggle">Toggle Duo</string>
+    <string name="diy_action_island_turnon">Turn On Island</string>
+    <string name="diy_action_island_turnoff">Turn Off Island</string>
+    <string name="diy_action_island_toggle">Toggle Island</string>
+    <string name="diy_action_statusglance_turnon">Turn On Status Glance</string>
+    <string name="diy_action_statusglance_turnoff">Turn Off Status Glance</string>
+    <string name="diy_action_statusglance_toggle">Toggle Status Glance</string>
     <string name="diy_action_hotspot_on">Turn On Hotspot</string>
     <string name="diy_action_hotspot_off">Turn Off Hotspot</string>
     <string name="diy_action_hotspot_toggle">Toggle Hotspot</string>

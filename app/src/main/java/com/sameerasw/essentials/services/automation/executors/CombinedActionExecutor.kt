@@ -26,6 +26,7 @@ import android.telephony.TelephonyManager
 import android.view.KeyEvent
 import android.widget.Toast
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.data.repository.SettingsRepository
 import com.sameerasw.essentials.domain.HapticFeedbackType
 import com.sameerasw.essentials.domain.diy.Action
 import com.sameerasw.essentials.services.NotificationListener
@@ -441,6 +442,16 @@ object CombinedActionExecutor {
                 is Action.TurnOnHotspot -> setHotspotEnabled(context, true)
                 is Action.TurnOffHotspot -> setHotspotEnabled(context, false)
                 is Action.ToggleHotspot -> setHotspotEnabled(context, !isHotspotEnabled(context))
+
+                is Action.TurnOnDuo -> SettingsRepository(context).setDuoEnabled(true)
+                is Action.TurnOffDuo -> SettingsRepository(context).setDuoEnabled(false)
+                is Action.ToggleDuo -> SettingsRepository(context).let { it.setDuoEnabled(!it.isDuoEnabled()) }
+                is Action.TurnOnIsland -> SettingsRepository(context).setIslandEnabled(true)
+                is Action.TurnOffIsland -> SettingsRepository(context).setIslandEnabled(false)
+                is Action.ToggleIsland -> SettingsRepository(context).let { it.setIslandEnabled(!it.isIslandEnabled()) }
+                is Action.TurnOnStatusGlance -> SettingsRepository(context).setStatusGlanceEnabled(true)
+                is Action.TurnOffStatusGlance -> SettingsRepository(context).setStatusGlanceEnabled(false)
+                is Action.ToggleStatusGlance -> SettingsRepository(context).let { it.setStatusGlanceEnabled(!it.isStatusGlanceEnabled()) }
 
                 is Action.SometimesEssentials -> {
                     val repository =
