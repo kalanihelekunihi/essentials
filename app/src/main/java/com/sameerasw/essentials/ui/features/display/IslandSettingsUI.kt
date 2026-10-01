@@ -103,6 +103,12 @@ fun IslandSettingsUI(
     val context = LocalContext.current
     val view = LocalView.current
     var requestingPermissionsFor by remember { mutableStateOf<Pair<Int, List<String>>?>(null) }
+
+    LaunchedEffect(Unit) {
+        if (viewModel.isIslandShowWeather.value && !OvercastWeather.isAvailable(context)) {
+            requestingPermissionsFor = Pair(R.string.lock_screen_clock_weather, listOf("OVERCAST_WEATHER"))
+        }
+    }
     var showMediaAppSelectionSheet by remember { mutableStateOf(false) }
     var showCalendarOptionsSheet by remember { mutableStateOf(false) }
     var showSoundModeOptionsSheet by remember { mutableStateOf(false) }
@@ -270,6 +276,12 @@ fun IslandSettingsUI(
             IconToggleItem(
                 iconRes = R.drawable.rounded_partly_cloudy_day_24,
                 title = stringResource(R.string.lock_screen_clock_weather),
+                description =
+                    if (viewModel.isIslandShowWeather.value && !viewModel.isOvercastWeatherPermissionGranted.value) {
+                        stringResource(R.string.weather_error_overcast_permission)
+                    } else {
+                        null
+                    },
                 isChecked = viewModel.isIslandShowWeather.value,
                 onCheckedChange = { checked ->
                     HapticUtil.performVirtualKeyHaptic(view)

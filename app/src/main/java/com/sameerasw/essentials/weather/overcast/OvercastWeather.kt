@@ -3,6 +3,9 @@ package com.sameerasw.essentials.weather.overcast
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.database.ContentObserver
+import android.os.Handler
+import android.os.Looper
 import android.net.Uri
 import androidx.core.net.toUri
 import com.google.gson.Gson
@@ -58,6 +61,22 @@ object OvercastWeather {
         } catch (_: Exception) {
             null
         }
+    }
+
+    // Fires whenever Overcast stores newer weather. Call unregister on the returned observer when done.
+    fun observe(context: Context, onChange: () -> Unit): ContentObserver {
+        val observer = object : ContentObserver(Handler(Looper.getMainLooper())) {
+            override fun onChange(selfChange: Boolean) = onChange()
+        }
+        try {
+            context.contentResolver.registerContentObserver(snapshotUri, false, observer)
+        } catch (_: SecurityException) {
+        }
+        return observer
+    }
+
+    fun stopObserving(context: Context, observer: ContentObserver) {
+        context.contentResolver.unregisterContentObserver(observer)
     }
 
     // Asks Overcast to fetch fresh data first. Returns false when it couldn't.

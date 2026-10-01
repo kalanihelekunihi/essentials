@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit
 
 class WeatherRefreshWorker(context: Context, params: WorkerParameters) : CoroutineWorker(context, params) {
     override suspend fun doWork(): Result {
-        WeatherRepository.refresh(applicationContext)
+        WeatherRepository.refresh(applicationContext, force = true)
         return Result.success()
     }
 }

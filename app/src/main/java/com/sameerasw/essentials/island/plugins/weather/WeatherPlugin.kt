@@ -4,6 +4,7 @@ import com.sameerasw.essentials.island.plugins.brief.BriefPlugin
 import com.sameerasw.essentials.island.model.InteractionOverrides
 import com.sameerasw.essentials.utils.DeviceUtils
 import android.content.Context
+import android.database.ContentObserver
 import android.text.format.DateFormat
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.ui.unit.dp
@@ -43,10 +44,15 @@ class WeatherPlugin : BaseIslandPlugin() {
     )
 
     private var observer: Job? = null
+    private var overcastObserver: ContentObserver? = null
     private var state = WeatherState()
 
     override fun onStart() {
         val c = ctx!!
+        overcastObserver = OvercastWeather.observe(context) {
+            c.scope.launch { WeatherRepository.sync(context) }
+        }
+        c.scope.launch { WeatherRepository.sync(context) }
         observer = c.scope.launch {
             WeatherRepository.ensureLoaded(context)
             WeatherRepository.state.collect { next ->
@@ -58,6 +64,8 @@ class WeatherPlugin : BaseIslandPlugin() {
     }
 
     override fun onStop() {
+        overcastObserver?.let { OvercastWeather.stopObserving(context, it) }
+        overcastObserver = null
         observer?.cancel()
         observer = null
     }
@@ -70,8 +78,9 @@ class WeatherPlugin : BaseIslandPlugin() {
             return
         }
         WeatherScheduler.schedule(context, WeatherRepository.REFRESH_INTERVAL_MINUTES)
-        if (WeatherRepository.isStale()) {
-            c.scope.launch { WeatherRepository.refresh(context) }
+        c.scope.launch {
+            WeatherRepository.sync(context)
+            if (WeatherRepository.isStale()) WeatherRepository.refresh(context, force = true)
         }
         render()
     }
