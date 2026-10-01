@@ -1,6 +1,5 @@
 package com.sameerasw.essentials.ui.features.display.sheets
 
-import android.content.Intent
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -10,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.activity.ComponentActivity
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -29,13 +29,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.sameerasw.essentials.R
 import com.sameerasw.essentials.data.repository.SettingsRepository
-import com.sameerasw.essentials.FeatureSettingsActivity
 import com.sameerasw.essentials.ui.core.cards.IconToggleItem
 import com.sameerasw.essentials.ui.core.containers.RoundedCardContainer
 import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
 import com.sameerasw.essentials.ui.core.sheets.EssentialsBottomSheet
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.viewmodels.MainViewModel
+import com.sameerasw.essentials.weather.overcast.OvercastWeather
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,6 +48,10 @@ fun IslandWeatherOptionsBottomSheet(
     val settings = remember { SettingsRepository(context) }
     var mode by remember { mutableStateOf(settings.getIslandWeatherMode()) }
     var peekAlerts by remember { mutableStateOf(settings.isIslandWeatherPeekAlertsEnabled()) }
+    var effects by remember { mutableStateOf(settings.isIslandWeatherEffectsEnabled()) }
+    var weatherHaptics by remember { mutableStateOf(settings.isIslandWeatherHapticsEnabled()) }
+    val installed = remember { OvercastWeather.isInstalled(context) }
+    var units by remember { mutableStateOf(settings.getWeatherUnits()) }
 
     EssentialsBottomSheet(onDismissRequest = onDismissRequest) {
         Column(
@@ -98,6 +102,51 @@ fun IslandWeatherOptionsBottomSheet(
                         settings.setIslandWeatherPeekAlertsEnabled(it)
                     },
                 )
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_rainy_24,
+                    title = stringResource(R.string.island_weather_effects_title),
+                    isChecked = effects,
+                    onCheckedChange = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        effects = it
+                        settings.setIslandWeatherEffectsEnabled(it)
+                    },
+                )
+                IconToggleItem(
+                    iconRes = R.drawable.rounded_thunderstorm_24,
+                    title = stringResource(R.string.island_weather_haptics_title),
+                    isChecked = weatherHaptics,
+                    enabled = effects,
+                    onCheckedChange = {
+                        HapticUtil.performVirtualKeyHaptic(view)
+                        weatherHaptics = it
+                        settings.setIslandWeatherHapticsEnabled(it)
+                    },
+                )
+            }
+
+            RoundedCardContainer(spacing = 2.dp, cornerRadius = 24.dp) {
+                SegmentedPicker(
+                    items = listOf(
+                        SettingsRepository.WEATHER_UNITS_SYSTEM,
+                        SettingsRepository.WEATHER_UNITS_CELSIUS,
+                        SettingsRepository.WEATHER_UNITS_FAHRENHEIT,
+                    ),
+                    selectedItem = units,
+                    onItemSelected = {
+                        units = it
+                        settings.setWeatherUnits(it)
+                    },
+                    labelProvider = {
+                        when (it) {
+                            SettingsRepository.WEATHER_UNITS_CELSIUS -> "°C"
+                            SettingsRepository.WEATHER_UNITS_FAHRENHEIT -> "°F"
+                            else -> context.getString(R.string.weather_units_system)
+                        }
+                    },
+                    modifier = Modifier.fillMaxWidth(),
+                    title = R.string.weather_units_title,
+                )
             }
 
             IslandLauncherOnlyToggle(SettingsRepository.KEY_ISLAND_WEATHER_LAUNCHER_ONLY)
@@ -110,14 +159,24 @@ fun IslandWeatherOptionsBottomSheet(
                         .fillMaxWidth()
                         .clickable {
                             HapticUtil.performVirtualKeyHaptic(view)
-                            context.startActivity(Intent(context, FeatureSettingsActivity::class.java).putExtra("feature", "Weather").addFlags(Intent.FLAG_ACTIVITY_NEW_TASK))
+                            when {
+                                !installed -> OvercastWeather.openInstallPage(context)
+                                !OvercastWeather.hasPermission(context) -> (context as? ComponentActivity)?.let { viewModel.requestOvercastWeatherPermission(it) }
+                                else -> OvercastWeather.openApp(context)
+                            }
                         },
                 ) {
                     Row(Modifier.padding(16.dp), verticalAlignment = Alignment.CenterVertically) {
                         Icon(painterResource(R.drawable.rounded_cloud_24), null, modifier = Modifier.size(24.dp), tint = MaterialTheme.colorScheme.primary)
                         Spacer(Modifier.width(16.dp))
                         Text(
-                            stringResource(R.string.island_weather_open_settings),
+                            stringResource(
+                                when {
+                                    !installed -> R.string.island_weather_install_overcast
+                                    !OvercastWeather.hasPermission(context) -> R.string.island_weather_allow_overcast
+                                    else -> R.string.island_weather_open_overcast
+                                },
+                            ),
                             style = MaterialTheme.typography.bodyLarge,
                             modifier = Modifier.weight(1f),
                         )

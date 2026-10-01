@@ -19,6 +19,7 @@ import android.os.Build
 import android.provider.Settings
 import androidx.core.app.ActivityCompat
 import com.sameerasw.essentials.R
+import com.sameerasw.essentials.weather.overcast.OvercastWeather
 import com.sameerasw.essentials.domain.model.AppPermission
 import com.sameerasw.essentials.domain.registry.PermissionRegistry
 import com.sameerasw.essentials.ui.core.sheets.PermissionItem
@@ -511,6 +512,31 @@ object PermissionUIHelper {
                             )
                         } else {
                             PermissionUtils.openManageExternalStorageSettings(context)
+                        }
+                    },
+                    isGranted = isGranted,
+                )
+            }
+
+            AppPermission.OVERCAST_WEATHER -> {
+                val installed = OvercastWeather.isInstalled(context)
+                val isGranted = viewModel.isOvercastWeatherPermissionGranted.value
+                PermissionItem(
+                    iconRes = permission.iconRes,
+                    title = permission.titleRes,
+                    description = if (installed) R.string.perm_overcast_weather_desc else R.string.perm_overcast_weather_missing_desc,
+                    dependentFeatures = PermissionRegistry.getFeatures(permission),
+                    actionLabel =
+                        when {
+                            isGranted -> R.string.perm_action_granted
+                            installed -> R.string.perm_action_grant
+                            else -> R.string.perm_action_install_overcast
+                        },
+                    action = {
+                        if (!installed) {
+                            OvercastWeather.openInstallPage(context)
+                        } else {
+                            (activity as? androidx.activity.ComponentActivity)?.let { viewModel.requestOvercastWeatherPermission(it) }
                         }
                     },
                     isGranted = isGranted,

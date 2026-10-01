@@ -10,7 +10,6 @@
 package com.sameerasw.essentials
 
 import com.sameerasw.essentials.data.repository.SettingsRepository
-import com.sameerasw.essentials.weather.effects.WeatherSimulation
 import com.sameerasw.essentials.ui.core.cards.ConfigPickerItem
 import android.Manifest
 import android.content.ClipData
@@ -291,7 +290,7 @@ class SettingsActivity : AppCompatActivity() {
         grantResults: IntArray,
     ) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        if (requestCode in 1001..1006) {
+        if (requestCode in 1001..1007) {
             viewModel.check(this)
         }
     }
@@ -1393,19 +1392,6 @@ fun SettingsContent(
                         Text(stringResource(R.string.btn_clear_search_history))
                     }
                 }
-
-                val devSettings = remember { SettingsRepository(context) }
-                var weatherExperimental by remember { mutableStateOf(devSettings.isWeatherExperimentalEnabled()) }
-                IconToggleItem(
-                    iconRes = R.drawable.rounded_partly_cloudy_day_24,
-                    title = stringResource(R.string.dev_weather_experimental_title),
-                    isChecked = weatherExperimental,
-                    onCheckedChange = {
-                        HapticUtil.performVirtualKeyHaptic(view)
-                        weatherExperimental = it
-                        devSettings.putBoolean(SettingsRepository.KEY_DEBUG_WEATHER_EXPERIMENTAL, it)
-                    },
-                )
 
                 Row(
                     modifier =

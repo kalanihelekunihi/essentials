@@ -76,6 +76,7 @@ import com.sameerasw.essentials.utils.AppIconUtil
 import com.sameerasw.essentials.utils.AppUtil
 import com.sameerasw.essentials.utils.DeviceUtils
 import com.sameerasw.essentials.utils.PermissionUtils
+import com.sameerasw.essentials.weather.overcast.OvercastWeather
 import com.sameerasw.essentials.utils.RefreshRateUtils
 import com.sameerasw.essentials.utils.RootUtils
 import com.sameerasw.essentials.utils.ShellUtils
@@ -308,6 +309,7 @@ class MainViewModel : ViewModel() {
     val isFlashlightPocketTurnOffEnabled = mutableStateOf(false)
     val isFlashlightOverheatEnabled = mutableStateOf(true)
     val isLocationPermissionGranted = mutableStateOf(false)
+    val isOvercastWeatherPermissionGranted = mutableStateOf(false)
     val isBackgroundLocationPermissionGranted = mutableStateOf(false)
     val isFullScreenIntentPermissionGranted = mutableStateOf(false)
     val isBluetoothPermissionGranted = mutableStateOf(false)
@@ -1849,6 +1851,7 @@ class MainViewModel : ViewModel() {
             PermissionUtils.isNotificationLightingAccessibilityServiceEnabled(context)
         isDefaultBrowserSet.value = PermissionUtils.isDefaultBrowser(context)
         isLocationPermissionGranted.value = PermissionUtils.hasLocationPermission(context)
+        isOvercastWeatherPermissionGranted.value = OvercastWeather.isAvailable(context)
         isBackgroundLocationPermissionGranted.value =
             PermissionUtils.hasBackgroundLocationPermission(context)
         isFullScreenIntentPermissionGranted.value = PermissionUtils.canUseFullScreenIntent(context)
@@ -7560,6 +7563,19 @@ class MainViewModel : ViewModel() {
             activity,
             arrayOf(Manifest.permission.READ_PHONE_STATE),
             1001,
+        )
+    }
+
+    /**
+     * Executes the request Overcast weather permission operation.
+     *
+     * @param activity [androidx.activity.ComponentActivity] Target activity.
+     */
+    fun requestOvercastWeatherPermission(activity: androidx.activity.ComponentActivity) {
+        androidx.core.app.ActivityCompat.requestPermissions(
+            activity,
+            arrayOf(OvercastWeather.PERMISSION),
+            1007,
         )
     }
 

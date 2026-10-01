@@ -1826,11 +1826,7 @@ Cần có quyền quản trị thiết bị nếu sử dụng chế độ khóa.
     <string name="island_weather_peek_alerts_title">Xem trước các cảnh báo nghiêm trọng</string>
     <string name="island_weather_effects_title">Tóm tắt ảnh hưởng của thời tiết</string>
     <string name="island_weather_haptics_title">Phản hồi xúc giác về thời tiết</string>
-    <string name="weather_provider_title">Nhà cung cấp</string>
-    <string name="weather_location_device">Vị trí hiện tại</string>
-    <string name="weather_location_manual">Chọn thành phố</string>
     <string name="weather_units_title">Đơn vị</string>
-    <string name="weather_refresh_interval_title">Làm mới mỗi</string>
     <string name="island_media_peek_song_change_title">Bài hát thay đổi</string>
     <string name="island_media_keep_when_paused_title">Hãy tiếp tục theo kịp tiến độ khi tạm dừng</string>
     <string name="feat_conscious_gate_title">Cổng ý thức</string>

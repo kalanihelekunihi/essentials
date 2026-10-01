@@ -2,7 +2,7 @@ package com.sameerasw.essentials.island.plugins.weather
 
 import android.content.Context
 import kotlinx.coroutines.delay
-import com.sameerasw.essentials.weather.provider.WeatherProviders
+import com.sameerasw.essentials.weather.WeatherSources
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.mutableLongStateOf
@@ -72,7 +72,6 @@ fun WeatherExpanded(
     scope: IslandExpandedScope,
     effects: Boolean,
     haptics: Boolean,
-    simulated: WeatherEffectSpec? = null,
     onRefresh: () -> Unit,
 ) {
     val state by WeatherRepository.state.collectAsState()
@@ -81,8 +80,8 @@ fun WeatherExpanded(
     val snapshot = state.snapshot
     val accent = MaterialTheme.colorScheme.primary
     val context = LocalContext.current
-    val effectSpec = remember(effects, snapshot, simulated) {
-        snapshot?.takeIf { effects }?.let { simulated ?: WeatherEffectSpec.from(it) } ?: WeatherEffectSpec.None
+    val effectSpec = remember(effects, snapshot) {
+        snapshot?.takeIf { effects }?.let(WeatherEffectSpec::from) ?: WeatherEffectSpec.None
     }
     val effectHaptics = remember(context, haptics) { DeviceWeatherHaptics(context).takeIf { haptics } }
 
@@ -178,11 +177,9 @@ private fun WeatherContent(
 @Composable
 private fun errorText(error: WeatherError?): String = stringResource(
     when (error) {
-        WeatherError.MissingApiKey -> R.string.weather_error_missing_key
-        WeatherError.InvalidApiKey -> R.string.weather_error_invalid_key
-        WeatherError.LocationPermission -> R.string.weather_error_location_permission
+        WeatherError.OvercastMissing -> R.string.weather_error_overcast_missing
+        WeatherError.OvercastPermission -> R.string.weather_error_overcast_permission
         WeatherError.NoLocation -> R.string.weather_error_no_location
-        WeatherError.Network -> R.string.weather_error_network
         is WeatherError.Unknown, null -> R.string.weather_error_unknown
     },
 )
@@ -281,7 +278,7 @@ private fun UpdatedRow(
         DateUtils.MINUTE_IN_MILLIS,
         DateUtils.FORMAT_ABBREV_RELATIVE,
     ).toString()
-    val provider = WeatherProviders.byId(snapshot.providerId).displayName
+    val provider = WeatherSources.displayName(snapshot.providerId)
     Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
         if (error != null) {
             Text(

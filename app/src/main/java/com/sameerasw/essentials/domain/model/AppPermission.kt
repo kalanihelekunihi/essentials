@@ -132,6 +132,11 @@ enum class AppPermission(
         key = "NOTIFICATION_BUBBLES",
         titleRes = R.string.perm_bubbles_title,
         iconRes = R.drawable.rounded_bubble_24,
+    ),
+    OVERCAST_WEATHER(
+        key = "OVERCAST_WEATHER",
+        titleRes = R.string.perm_overcast_weather_title,
+        iconRes = R.drawable.rounded_partly_cloudy_day_24,
     );
 
     companion object {

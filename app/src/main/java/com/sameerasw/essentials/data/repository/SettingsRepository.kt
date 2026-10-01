@@ -504,10 +504,6 @@ class SettingsRepository(
         const val KEY_ISLAND_DISMISS_ON_OUTSIDE = "island_dismiss_on_outside"
         const val KEY_ISLAND_CAMERA_POSITION = "island_camera_position"
         const val KEY_ISLAND_PREVIEW_RING = "island_preview_ring"
-        const val KEY_DEBUG_SIMULATED_WEATHER = "debug_simulated_weather"
-        const val KEY_DEBUG_WEATHER_EXPERIMENTAL = "debug_weather_experimental"
-        const val KEY_DEBUG_SIMULATED_TIME = "debug_simulated_time"
-        const val KEY_DEBUG_SIMULATED_TEMP = "debug_simulated_temp"
         const val KEY_ISLAND_PREVIEW_STAGE = "island_preview_stage"
         const val ISLAND_PREVIEW_STAGE_AUTO = "auto"
         const val ISLAND_PREVIEW_STAGE_PEEK = "peek"
@@ -528,15 +524,8 @@ class SettingsRepository(
         const val ISLAND_WEATHER_MODE_COMPACT = "compact"
         const val ISLAND_WEATHER_MODE_ALERTS = "alerts"
 
-        const val KEY_WEATHER_PROVIDER = "weather_provider"
-        const val KEY_WEATHER_API_KEY = "weather_api_key"
-        const val KEY_WEATHER_SHOW_IN_LAUNCHER = "weather_show_in_launcher"
-        const val KEY_WEATHER_OPENMETEO_MODEL = "weather_openmeteo_model"
-        fun weatherApiKeyName(providerId: String) = "${KEY_WEATHER_API_KEY}_$providerId"
-        const val KEY_WEATHER_LOCATION_MODE = "weather_location_mode"
-        const val KEY_WEATHER_MANUAL_LOCATION = "weather_manual_location"
         const val KEY_WEATHER_UNITS = "weather_units"
-        const val KEY_WEATHER_REFRESH_MINUTES = "weather_refresh_minutes"
+        private const val LEGACY_WEATHER_API_KEY_PREFIX = "weather_api_key"
         const val WEATHER_UNITS_SYSTEM = "system"
         const val WEATHER_UNITS_CELSIUS = "celsius"
         const val WEATHER_UNITS_FAHRENHEIT = "fahrenheit"
@@ -1634,7 +1623,7 @@ class SettingsRepository(
                     if (key == KEY_GITHUB_ACCESS_TOKEN ||
                         key == KEY_GITHUB_WORKFLOW_TOKEN ||
                         key == KEY_SHIZUKU_AUTH_TOKEN ||
-                        key.startsWith(KEY_WEATHER_API_KEY) ||
+                        key.startsWith(LEGACY_WEATHER_API_KEY_PREFIX) ||
                         key.startsWith("mac_battery_") ||
                         key == "airsync_mac_connected" ||
                         key == KEY_SNOOZE_DISCOVERED_CHANNELS ||
@@ -1711,8 +1700,7 @@ class SettingsRepository(
                         KEY_GITHUB_ACCESS_TOKEN,
                         KEY_GITHUB_WORKFLOW_TOKEN,
                         KEY_SHIZUKU_AUTH_TOKEN,
-                        KEY_WEATHER_API_KEY,
-                        *com.sameerasw.essentials.weather.provider.WeatherProviders.all.map { weatherApiKeyName(it.id) }.toTypedArray(),
+                        LEGACY_WEATHER_API_KEY_PREFIX,
                         "airsync_mac_connected",
                         KEY_SNOOZE_DISCOVERED_CHANNELS,
                         KEY_MAPS_DISCOVERED_CHANNELS,
@@ -1752,7 +1740,7 @@ class SettingsRepository(
                             if (key == KEY_GITHUB_ACCESS_TOKEN ||
                                 key == KEY_GITHUB_WORKFLOW_TOKEN ||
                                 key == KEY_SHIZUKU_AUTH_TOKEN ||
-                                key.startsWith(KEY_WEATHER_API_KEY)
+                                key.startsWith(LEGACY_WEATHER_API_KEY_PREFIX)
                             ) {
                                 return@forEach
                             }
@@ -3747,57 +3735,8 @@ class SettingsRepository(
     fun isIslandWeatherHapticsEnabled(): Boolean = getBoolean(KEY_ISLAND_WEATHER_HAPTICS, true)
     fun setIslandWeatherHapticsEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_WEATHER_HAPTICS, enabled)
 
-    fun getWeatherProvider(): String? = getString(KEY_WEATHER_PROVIDER, null)
-    fun setWeatherProvider(id: String) = putString(KEY_WEATHER_PROVIDER, id)
-
-    // Keys are stored per provider; the single key from before multiple sources belongs to WeatherAPI.com.
-    fun isWeatherExperimentalEnabled(): Boolean = getBoolean(KEY_DEBUG_WEATHER_EXPERIMENTAL, false)
-
-    fun getSimulatedWeather(): com.sameerasw.essentials.weather.effects.WeatherSimulationPreset? =
-        if (isWeatherExperimentalEnabled()) {
-            com.sameerasw.essentials.weather.effects.WeatherSimulation.find(
-                getString(KEY_DEBUG_SIMULATED_WEATHER, com.sameerasw.essentials.weather.effects.WeatherSimulation.OFF),
-            )
-        } else {
-            null
-        }
-
-    fun getSimulatedTimeOfDay(): String? =
-        if (isWeatherExperimentalEnabled()) getString(KEY_DEBUG_SIMULATED_TIME, "auto")?.takeIf { it != "auto" } else null
-
-    fun getSimulatedTempC(): Double? =
-        if (isWeatherExperimentalEnabled()) getString(KEY_DEBUG_SIMULATED_TEMP, "auto")?.toDoubleOrNull() else null
-
-    fun getWeatherOpenMeteoModel(): String? = getString(KEY_WEATHER_OPENMETEO_MODEL, null)?.takeIf { it.isNotBlank() }
-    fun setWeatherOpenMeteoModel(model: String?) = putString(KEY_WEATHER_OPENMETEO_MODEL, model.orEmpty())
-
-    fun getWeatherApiKey(providerId: String): String? {
-        val own = getString(weatherApiKeyName(providerId), null)
-        if (own != null) return own.takeIf { it.isNotBlank() }
-        return if (providerId == "weatherapi") getString(KEY_WEATHER_API_KEY, null)?.takeIf { it.isNotBlank() } else null
-    }
-    fun setWeatherApiKey(providerId: String, key: String?) = putString(weatherApiKeyName(providerId), key?.trim().orEmpty())
-
-    fun getWeatherLocationMode(): String = getString(KEY_WEATHER_LOCATION_MODE, "device") ?: "device"
-    fun setWeatherLocationMode(mode: String) = putString(KEY_WEATHER_LOCATION_MODE, mode)
-
-    // Stored as "lat|lon|name".
-    fun getWeatherManualLocation(): Triple<Double, Double, String>? {
-        val parts = getString(KEY_WEATHER_MANUAL_LOCATION, null)?.split("|", limit = 3) ?: return null
-        if (parts.size != 3) return null
-        val lat = parts[0].toDoubleOrNull() ?: return null
-        val lon = parts[1].toDoubleOrNull() ?: return null
-        return Triple(lat, lon, parts[2])
-    }
-
-    fun setWeatherManualLocation(latitude: Double, longitude: Double, name: String) =
-        putString(KEY_WEATHER_MANUAL_LOCATION, "$latitude|$longitude|${name.replace("|", " ")}")
-
     fun getWeatherUnits(): String = getString(KEY_WEATHER_UNITS, WEATHER_UNITS_SYSTEM) ?: WEATHER_UNITS_SYSTEM
     fun setWeatherUnits(units: String) = putString(KEY_WEATHER_UNITS, units)
-
-    fun getWeatherRefreshMinutes(): Int = getInt(KEY_WEATHER_REFRESH_MINUTES, 60)
-    fun setWeatherRefreshMinutes(minutes: Int) = putInt(KEY_WEATHER_REFRESH_MINUTES, minutes)
 
     fun isIslandShowTimersEnabled(): Boolean = getBoolean(KEY_ISLAND_SHOW_TIMERS, true)
     fun setIslandShowTimersEnabled(enabled: Boolean) = putBoolean(KEY_ISLAND_SHOW_TIMERS, enabled)

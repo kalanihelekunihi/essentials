@@ -12,7 +12,6 @@ package com.sameerasw.essentials.ui.features.display
 import androidx.compose.foundation.background
 import com.sameerasw.essentials.ui.core.pickers.ColorSwatchPicker
 import com.sameerasw.essentials.ui.core.pickers.SegmentedPicker
-import com.sameerasw.essentials.data.repository.SettingsRepository
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.expandVertically
@@ -77,6 +76,7 @@ import com.sameerasw.essentials.ui.features.display.sheets.IslandTimerOptionsBot
 import com.sameerasw.essentials.ui.features.display.sheets.IslandWeatherOptionsBottomSheet
 import com.sameerasw.essentials.ui.features.display.sheets.StatusGlanceCalendarOptionsBottomSheet
 import com.sameerasw.essentials.ui.modifiers.highlight
+import com.sameerasw.essentials.weather.overcast.OvercastWeather
 import com.sameerasw.essentials.utils.HapticUtil
 import com.sameerasw.essentials.utils.PermissionUIHelper
 import com.sameerasw.essentials.utils.PermissionUtils
@@ -274,17 +274,8 @@ fun IslandSettingsUI(
                 onCheckedChange = { checked ->
                     HapticUtil.performVirtualKeyHaptic(view)
                     viewModel.setIslandShowWeather(checked)
-                    if (checked) {
-                        val weatherSettings = SettingsRepository(context)
-                        val weatherProvider = com.sameerasw.essentials.weather.provider.WeatherProviders
-                            .resolve(weatherSettings.getWeatherProvider(), weatherSettings.getWeatherApiKey("weatherapi"))
-                        if (weatherProvider.requiresApiKey && weatherSettings.getWeatherApiKey(weatherProvider.id) == null) {
-                            context.startActivity(Intent(context, com.sameerasw.essentials.FeatureSettingsActivity::class.java).putExtra("feature", "Weather"))
-                        } else if (weatherSettings.getWeatherLocationMode() != "manual" &&
-                            !com.sameerasw.essentials.weather.location.DeviceLocationSource.hasPermission(context)
-                        ) {
-                            requestingPermissionsFor = Pair(R.string.lock_screen_clock_weather, listOf("LOCATION"))
-                        }
+                    if (checked && !OvercastWeather.isAvailable(context)) {
+                        requestingPermissionsFor = Pair(R.string.lock_screen_clock_weather, listOf("OVERCAST_WEATHER"))
                     }
                 },
                 onSettingsClick = { showWeatherOptionsSheet = true },

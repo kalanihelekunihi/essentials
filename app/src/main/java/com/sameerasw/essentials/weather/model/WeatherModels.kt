@@ -1,7 +1,6 @@
 package com.sameerasw.essentials.weather.model
 
 import androidx.annotation.Keep
-import java.util.Locale
 
 @Keep
 enum class WeatherCondition {
@@ -32,26 +31,6 @@ enum class AlertSeverity {
 }
 
 enum class TemperatureUnit { CELSIUS, FAHRENHEIT }
-
-@Keep
-data class WeatherLocation(
-    val latitude: Double,
-    val longitude: Double,
-    val name: String? = null,
-) {
-    // ~1km precision is plenty for weather and keeps the exact position off the wire.
-    val query: String get() = "%.2f,%.2f".format(Locale.US, latitude, longitude)
-}
-
-data class CityResult(
-    val name: String,
-    val region: String,
-    val country: String,
-    val latitude: Double,
-    val longitude: Double,
-) {
-    val label: String get() = listOf(name, region, country).filter { it.isNotBlank() }.distinct().joinToString(", ")
-}
 
 @Keep
 data class HourlyForecast(
@@ -124,11 +103,9 @@ data class WeatherSnapshot(
 }
 
 sealed interface WeatherError {
-    data object MissingApiKey : WeatherError
-    data object InvalidApiKey : WeatherError
+    data object OvercastMissing : WeatherError
+    data object OvercastPermission : WeatherError
     data object NoLocation : WeatherError
-    data object LocationPermission : WeatherError
-    data object Network : WeatherError
     data class Unknown(val message: String?) : WeatherError
 }
 
