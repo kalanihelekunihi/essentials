@@ -37,7 +37,16 @@ object OvercastWeather {
     fun hasPermission(context: Context): Boolean =
         context.checkSelfPermission(PERMISSION) == PackageManager.PERMISSION_GRANTED
 
-    fun isAvailable(context: Context): Boolean = isInstalled(context) && hasPermission(context)
+    private fun isGenuine(context: Context): Boolean =
+        try {
+            val provider = context.packageManager.resolveContentProvider(AUTHORITY, 0)
+            val permission = context.packageManager.getPermissionInfo(PERMISSION, 0)
+            provider?.packageName == PACKAGE && permission.packageName == PACKAGE
+        } catch (_: Exception) {
+            false
+        }
+
+    fun isAvailable(context: Context): Boolean = isInstalled(context) && hasPermission(context) && isGenuine(context)
 
     fun openApp(context: Context) {
         val launch = context.packageManager.getLaunchIntentForPackage(PACKAGE) ?: return
@@ -68,6 +77,7 @@ object OvercastWeather {
         val observer = object : ContentObserver(Handler(Looper.getMainLooper())) {
             override fun onChange(selfChange: Boolean) = onChange()
         }
+        if (!isAvailable(context)) return observer
         try {
             context.contentResolver.registerContentObserver(snapshotUri, false, observer)
         } catch (_: SecurityException) {
