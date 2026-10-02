@@ -1630,4 +1630,9 @@
     <string name="island_section_visuals">Visual</string>
     <string name="island_section_duration">Duração </string>
     <string name="island_section_behavior">Comportamento</string>
+    <string name="sound_mode_use_shizuku_desc">Usar Shizuku para ativar o modo de toque sem ativar o modo Não Perturbe.</string>
+    <string name="flashlight_pocket_title">detecção de bolso</string>
+    <string name="flashlight_pocket_desc">Desligua a lanterna quando o celular estiver no seu bolso.</string>
+    <string name="flashlight_overheat_title">prevenção de aquecimento</string>
+    <string name="flashlight_overheat_desc">Diminui o brilho após um período de uso prolongado.</string>
 </resources>
