@@ -1622,4 +1622,12 @@
     <string name="label_battery_current_now">Corrente em tempo real</string>
     <string name="label_battery_current_avg">Corrente média</string>
     <string name="label_battery_avg_remaining">Tempo médio restante</string>
+    <string name="island_media_peek_song_change_title">Prévia ao mudar de música</string>
+    <string name="island_media_keep_when_paused_title">Manter em modo de recuperação quando pausado</string>
+    <string name="island_media_show_previous_title">mostrar botão para voltar a música anterior</string>
+    <string name="island_sound_mode_keep_icon_title">Continuar mostrando o ícone</string>
+    <string name="island_section_placement">posicionamento</string>
+    <string name="island_section_visuals">Visual</string>
+    <string name="island_section_duration">Duração </string>
+    <string name="island_section_behavior">Comportamento</string>
 </resources>
