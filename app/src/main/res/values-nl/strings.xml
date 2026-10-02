@@ -1641,4 +1641,5 @@
     <string name="island_max_width_title">Maximum breedte</string>
     <string name="island_expanded_width_title">Uitgeklapte breedte</string>
     <string name="island_cutout_gap_title">Camera ruimte</string>
+    <string name="duo_enable_title">Duo Inschakelen</string>
 </resources>
