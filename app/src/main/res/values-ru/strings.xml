@@ -1777,10 +1777,17 @@
     <string name="island_call_show_expanded">Раскрытым </string>
     <string name="island_call_show_compact">Компактно</string>
     <string name="island_notif_conceal_locked_title">Скрыть содержимое уведомлений</string>
-    <string name="conscious_gate_preview_button">Предпросмотр экрана \"Сознательных врата\"</string>
+    <string name="conscious_gate_preview_button">Предпросмотр экрана Сознательных ворот </string>
     <string name="conscious_gate_enable_title">Включить сознательные врата</string>
     <string name="conscious_gate_select_apps_title">Выбрать закрытые приложения </string>
     <string name="status_glance_calendar_timeframe_title">Показывать предстоящие события в</string>
     <string name="island_launcher_only_title">Показывать только в лаунчере </string>
     <string name="status_glance_calendar_show_all_day_title">Показывать события на весь день </string>
+    <string name="feat_conscious_gate_desc">Пауза перед тем как открыть выбранные приложения </string>
+    <string name="conscious_gate_delay_title">Длительность паузы </string>
+    <string name="conscious_gate_reappear_desc">Показывать экран «Сознательных ворот» после продолжительного использования</string>
+    <string name="conscious_gate_feel_every_second_title">Чувствовать каждую потраченную секунду </string>
+    <string name="about_desc_conscious_gate">Добавляет короткий экран осознанного контроля перед открытием приложений, к которым вы решили подходить более осознанно, например, соц сетей
+
+Кнопка Продолжить остается неактивной в течение нескольких секунд, чтобы у вас было время принять решение, и при желании пауза может появиться снова, если вы продолжите использовать приложение после истечения установленного времени</string>
 </resources>
