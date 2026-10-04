@@ -997,7 +997,10 @@ class FeatureSettingsActivity : AppCompatActivity() {
 
                                     "Sound mode tile" -> {
                                         SoundModeTileSettingsUI(
-                                            modifier = Modifier.padding(top = 16.dp),
+                                            modifier =
+                                                Modifier
+                                                    .nestedScroll(nestedScrollConnection)
+                                                    .padding(top = 16.dp),
                                             highlightSetting = highlightSetting,
                                         )
                                     }
