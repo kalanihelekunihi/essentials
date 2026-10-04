@@ -1747,4 +1747,6 @@ Requiere permiso de administrador del dispositivo si se utiliza el bloqueo.</str
     <string name="island_weather_haptics_title">Háptica de simulación</string>
     <string name="screen_locked_disable_notification_interactions_title">Deshabilitar las interacciones de notificaciones</string>
     <string name="screen_locked_disable_notification_interactions_desc">Bloquea las panel de notificaciones y los Ajustes Rapidos si se desliza hacia abajo mientras esta bloqueado</string>
+    <string name="perm_overcast_weather_title">Permiso del clima de Overcast</string>
+    <string name="perm_overcast_weather_desc">Essentials lee el ultimo clima de tu actual o guardada ubicacion de Overcast</string>
 </resources>
